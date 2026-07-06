@@ -212,29 +212,45 @@ class World:
                 "text": "The Village Warden studies the mud on your boots. 'You steadied the square and listened to the rain. The drowned shrine is yours to face.'",
                 "choices": [{"text": "Ask for the shrine path", "effect": "unlock:shrine"}]
             },
+            "village_warden_intro": {
+                "text": "The Village Warden plants a staff in the wet boards. 'Before I mark our shrine, prove you can help a place that is still drowning. Speak to the Rain Listener, the Bell Diver, and the Root Medic.'",
+                "choices": [{"text": "Take the village tasks", "effect": "region_tasks:start"}]
+            },
             "village_warden_wait": {
                 "text": "The Village Warden shakes their head. 'Not yet. Learn what the rain knows, return the drowned bell, and help the root medic before I mark the shrine.'",
                 "choices": [{"text": "I will help first", "effect": "stay"}]
             },
             "village_listener": {
-                "text": "The Rain Listener cups one hand to the sky. 'The roots below us are hollow. Walk lightly until we know what woke them.'",
-                "choices": [{"text": "Listen to the rain", "effect": "learn:village"}]
+                "text": "The Rain Listener cups one hand to the sky. 'The water repeats every secret. Do you want the warning or the comfort?'",
+                "choices": [
+                    {"text": "Hear the warning", "effect": "learn:village"},
+                    {"text": "Ask for comfort", "effect": "gain:mercy"},
+                    {"text": "Step back", "effect": "stay"}
+                ]
             },
             "knowledge_village_done": {
                 "text": "The Rain Listener nods. 'You already heard what the rain would say.'",
                 "choices": [{"text": "Step away", "effect": "stay"}]
             },
             "village_bell": {
-                "text": "A Bell Diver wrings water from their sleeve. 'The shrine bell sank in the square. Help me haul it up, and the village will hear itself again.'",
-                "choices": [{"text": "Haul up the bell", "effect": "task:village_bell_returned:Drowned Bell"}]
+                "text": "A Bell Diver wrings water from their sleeve. 'The shrine bell sank near the old well. If you find it, the village will hear itself again.'",
+                "choices": [
+                    {"text": "Search for the bell", "effect": "quest:village_bell"},
+                    {"text": "Ask why it matters", "effect": "learn:village"},
+                    {"text": "Leave", "effect": "stay"}
+                ]
             },
             "village_bell_done": {
                 "text": "The Bell Diver taps the restored bell. Its note rolls through the flooded street.",
                 "choices": [{"text": "Step away", "effect": "stay"}]
             },
             "village_medic": {
-                "text": "The Root Medic presses moss to a cracked beam. 'Hold this steady while I bind it. Even houses need mercy.'",
-                "choices": [{"text": "Help bind the roots", "effect": "task:village_medic_helped:Root Medic Helped"}]
+                "text": "The Root Medic presses moss to a cracked beam. 'I need clean root-fiber from the dry bridge. Bring it, and I can bind this house before it sinks.'",
+                "choices": [
+                    {"text": "Find root-fiber", "effect": "quest:village_medic"},
+                    {"text": "Ask about the house", "effect": "gain:mercy"},
+                    {"text": "Leave", "effect": "stay"}
+                ]
             },
             "village_medic_done": {
                 "text": "The Root Medic nods. 'The roots will hold for now.'",
@@ -255,29 +271,45 @@ class World:
                 "text": "The Echo Keeper raises a lantern. 'The cavern shrine answers movement, not words. Find it before the dark finds your name.'",
                 "choices": [{"text": "Ask for the shrine path", "effect": "unlock:shrine"}]
             },
+            "cavern_warden_intro": {
+                "text": "The Echo Keeper raises a lantern but does not hand it over. 'Bring proof that you can listen in the dark: learn the echo, find the blue crystal, and guide the lost miner home.'",
+                "choices": [{"text": "Take the cavern tasks", "effect": "region_tasks:start"}]
+            },
             "cavern_warden_wait": {
                 "text": "The Echo Keeper keeps the lantern low. 'Bring back a living echo, find the blue crystal, and guide the lost miner. Then I will show you the shrine.'",
                 "choices": [{"text": "Into the dark, then", "effect": "stay"}]
             },
             "knowledge_cavern": {
-                "text": "A Miner of the Deep taps the wall. 'Stone remembers every footstep. Step soft when the echo steps back.'",
-                "choices": [{"text": "Learn the echo", "effect": "learn:cavern"}]
+                "text": "A Miner of the Deep taps the wall twice, then waits for three answers. 'Stone remembers every footstep. What do you hear back?'",
+                "choices": [
+                    {"text": "A warning", "effect": "learn:cavern"},
+                    {"text": "A challenge", "effect": "gain:power"},
+                    {"text": "Only stone", "effect": "stay"}
+                ]
             },
             "knowledge_cavern_done": {
                 "text": "The Miner of the Deep listens to the same echo again.",
                 "choices": [{"text": "Step away", "effect": "stay"}]
             },
             "cavern_crystal": {
-                "text": "A Crystal Child points to a blue vein in the rock. 'It sings when kind hands touch it. Can you hear it?'",
-                "choices": [{"text": "Take the blue crystal", "effect": "task:cavern_crystal_found:Blue Crystal"}]
+                "text": "A Crystal Child points into the dark. 'The blue crystal rolled under the black arch. It sings when kind hands touch it. Can you bring it back?'",
+                "choices": [
+                    {"text": "Search for the crystal", "effect": "quest:cavern_crystal"},
+                    {"text": "Ask about its song", "effect": "learn:cavern"},
+                    {"text": "Leave", "effect": "stay"}
+                ]
             },
             "cavern_crystal_done": {
                 "text": "The Crystal Child listens to the quiet place where the crystal used to sing.",
                 "choices": [{"text": "Step away", "effect": "stay"}]
             },
             "cavern_miner": {
-                "text": "A Lost Miner grips a broken lamp. 'I can hear the exit, but I cannot find it. Walk me back to the lantern.'",
-                "choices": [{"text": "Guide the miner", "effect": "task:cavern_miner_found:Lost Miner Guided"}]
+                "text": "A Lost Miner grips a broken lamp. 'My guide-stone fell near the rail bend. Without it, every tunnel sounds like home.'",
+                "choices": [
+                    {"text": "Find the guide-stone", "effect": "quest:cavern_miner"},
+                    {"text": "Tell him to stay calm", "effect": "gain:mercy"},
+                    {"text": "Leave", "effect": "stay"}
+                ]
             },
             "cavern_miner_done": {
                 "text": "The Lost Miner breathes easier beside the lit path.",
@@ -298,29 +330,45 @@ class World:
                 "text": "The Ash Sentinel lowers their blade. 'The final shrine burns behind the broken court. End what followed you from the forest.'",
                 "choices": [{"text": "Ask for the shrine path", "effect": "unlock:shrine"}]
             },
+            "citadel_warden_intro": {
+                "text": "The Ash Sentinel bars the court. 'No one enters the final shrine on courage alone. Read the red page, gather cold embers, and mend the banner first.'",
+                "choices": [{"text": "Take the citadel tasks", "effect": "region_tasks:start"}]
+            },
             "citadel_warden_wait": {
                 "text": "The Ash Sentinel bars the court. 'Read the red page, gather the cold embers, and mend the torn banner. Then the last shrine opens.'",
                 "choices": [{"text": "I will return", "effect": "stay"}]
             },
             "knowledge_citadel": {
-                "text": "The Red Archivist opens a scorched book. 'Power without memory becomes blight wearing a crown.'",
-                "choices": [{"text": "Read the page", "effect": "learn:citadel"}]
+                "text": "The Red Archivist opens a scorched book. 'Power without memory becomes blight wearing a crown. Which line do you follow?'",
+                "choices": [
+                    {"text": "The line about memory", "effect": "learn:citadel"},
+                    {"text": "The line about power", "effect": "gain:power"},
+                    {"text": "Close the book", "effect": "stay"}
+                ]
             },
             "knowledge_citadel_done": {
                 "text": "The Red Archivist closes the book. 'That page has already marked you.'",
                 "choices": [{"text": "Step away", "effect": "stay"}]
             },
             "citadel_embers": {
-                "text": "An Ember Keeper kneels beside ash that refuses to cool. 'Gather only the cold embers. The hot ones remember teeth.'",
-                "choices": [{"text": "Gather cold embers", "effect": "task:citadel_embers_gathered:Cold Embers"}]
+                "text": "An Ember Keeper kneels beside ash that refuses to cool. 'The cold embers scattered near the broken court. The hot ones remember teeth.'",
+                "choices": [
+                    {"text": "Gather cold embers", "effect": "quest:citadel_embers"},
+                    {"text": "Ask about the fire", "effect": "learn:citadel"},
+                    {"text": "Leave", "effect": "stay"}
+                ]
             },
             "citadel_embers_done": {
                 "text": "The Ember Keeper sifts the harmless ash through one hand.",
                 "choices": [{"text": "Step away", "effect": "stay"}]
             },
             "citadel_banner": {
-                "text": "A Banner Keeper holds torn cloth against the wind. 'Help me mend this, and the citadel may remember it was built to protect.'",
-                "choices": [{"text": "Mend the banner", "effect": "task:citadel_banner_mended:Banner Mended"}]
+                "text": "A Banner Keeper holds torn cloth against the wind. 'The silver thread blew into the lower court. Find it, and the citadel may remember it was built to protect.'",
+                "choices": [
+                    {"text": "Find silver thread", "effect": "quest:citadel_banner"},
+                    {"text": "Ask what the banner means", "effect": "gain:mercy"},
+                    {"text": "Leave", "effect": "stay"}
+                ]
             },
             "citadel_banner_done": {
                 "text": "The mended banner snaps once, bright against the ash.",
@@ -338,8 +386,17 @@ class World:
                 ]
             },
             "regional_lore": {
-                "text": "They share a small local truth: every place touched by moss has its own wound, and its own way of healing.",
-                "choices": [{"text": "Remember this", "effect": "gain:knowledge"}]
+                "text": "They share a local truth, something ordinary enough to survive the blight. It sounds different in every mouth, but it points toward the same lesson.",
+                "choices": [
+                    {"text": "Ask about the shrine", "effect": "gain:knowledge"},
+                    {"text": "Ask how people endure", "effect": "gain:mercy"},
+                    {"text": "Ask what threatens them", "effect": "gain:power"},
+                    {"text": "Move on", "effect": "stay"}
+                ]
+            },
+            "regional_locked": {
+                "text": "They glance toward the local elder. 'Speak to the one who keeps this place first. The work starts there.'",
+                "choices": [{"text": "Find the elder", "effect": "stay"}]
             }
         }
 
@@ -359,7 +416,13 @@ class World:
         return list(self.regions.keys()).index(self.region)
 
     def get_region_key_item(self):
-        return f"{self.region} Gate Key"
+        names = {
+            "Forest": "Forest Gate Key",
+            "Village": "Village Gate Key",
+            "Caverns": "Cavern Gate Key",
+            "Citadel": "Citadel Gate Key"
+        }
+        return names.get(self.region, f"{self.region} Gate Key")
 
     def get_shrine_unlocked_flag(self):
         return f"{self.get_region_key()}_shrine_unlocked"
@@ -381,8 +444,41 @@ class World:
         }
         return tasks.get(self.region, [])
 
+    def get_region_tasks_started_flag(self):
+        return f"{self.get_region_key()}_tasks_started"
+
+    def has_region_tasks_started(self, player):
+        return self.get_region_tasks_started_flag() in player.flags
+
     def has_region_tasks_complete(self, player):
         return all(flag in player.flags for flag in self.get_region_task_flags())
+
+    def get_collectibles(self):
+        return {
+            "Village": [
+                {"start": "started_village_bell", "done": "village_bell_returned", "label": "Drowned Bell", "rect": pygame.Rect(760, 500, 80, 80), "prompt": "Click to haul up bell"},
+                {"start": "started_village_medic", "done": "village_medic_helped", "label": "Root-Fiber", "rect": pygame.Rect(1510, 430, 90, 70), "prompt": "Click to gather root-fiber"}
+            ],
+            "Caverns": [
+                {"start": "started_cavern_crystal", "done": "cavern_crystal_found", "label": "Blue Crystal", "rect": pygame.Rect(2260, 520, 80, 80), "prompt": "Click to take crystal"},
+                {"start": "started_cavern_miner", "done": "cavern_miner_found", "label": "Guide-Stone", "rect": pygame.Rect(1380, 1180, 80, 80), "prompt": "Click to recover guide-stone"}
+            ],
+            "Citadel": [
+                {"start": "started_citadel_embers", "done": "citadel_embers_gathered", "label": "Cold Embers", "rect": pygame.Rect(1840, 520, 90, 80), "prompt": "Click to gather embers"},
+                {"start": "started_citadel_banner", "done": "citadel_banner_mended", "label": "Silver Thread", "rect": pygame.Rect(2260, 980, 90, 80), "prompt": "Click to take silver thread"}
+            ]
+        }.get(self.region, [])
+
+    def get_nearby_collectible(self, player):
+        player_rect = player.get_rect_world()
+        for collectible in self.get_collectibles():
+            if (
+                collectible["start"] in player.flags and
+                collectible["done"] not in player.flags and
+                player_rect.colliderect(collectible["rect"].inflate(50, 50))
+            ):
+                return collectible
+        return None
 
     def draw(self, screen, player, camera_x, camera_y):
         self.draw_ground(screen, camera_x, camera_y)
@@ -411,6 +507,11 @@ class World:
             pygame.draw.rect(screen, (120, 105, 90), square)
             pygame.draw.rect(screen, (170, 170, 190), well)
             pygame.draw.rect(screen, (235, 235, 220), well, 2)
+            for collectible in self.get_collectibles():
+                if collectible["start"] in player.flags and collectible["done"] not in player.flags:
+                    rect = collectible["rect"].move(-camera_x, -camera_y)
+                    pygame.draw.rect(screen, (210, 190, 90), rect)
+                    pygame.draw.rect(screen, (255, 245, 180), rect, 2)
         else:
             stump_screen = self.stump_rect.move(-camera_x, -camera_y)
             pygame.draw.rect(screen, (90, 130, 220), stump_screen)
@@ -484,11 +585,15 @@ class World:
             return self.dialogues[dialogue_id]
 
         if dialogue_id == "village_listener":
+            if not self.has_region_tasks_started(player):
+                return self.dialogues["regional_locked"]
             if "learned_village" in player.flags:
                 return self.dialogues["knowledge_village_done"]
             return self.dialogues["village_listener"]
 
         if dialogue_id in ("village_warden", "cavern_warden", "citadel_warden"):
+            if not self.has_region_tasks_started(player):
+                return self.dialogues[f"{dialogue_id}_intro"]
             if self.has_region_tasks_complete(player):
                 return self.dialogues[dialogue_id]
             return self.dialogues[f"{dialogue_id}_wait"]
@@ -502,9 +607,16 @@ class World:
             "citadel_banner": "citadel_banner_mended"
         }
         if dialogue_id in task_dialogues:
+            if not self.has_region_tasks_started(player):
+                return self.dialogues["regional_locked"]
             if task_dialogues[dialogue_id] in player.flags:
                 return self.dialogues[f"{dialogue_id}_done"]
             return self.dialogues[dialogue_id]
+
+        if dialogue_id == "regional_lore":
+            if not self.has_region_tasks_started(player):
+                return self.dialogues["regional_locked"]
+            return self.dialogues["regional_lore"]
 
         return self.dialogues.get(dialogue_id)
 
@@ -559,7 +671,13 @@ class World:
         if self.get_shrine_unlocked_flag() in player.flags:
             return [f"Find the marked {self.region} shrine and confront its guardian."]
 
+        if not self.has_region_tasks_started(player):
+            return [f"Speak to the {self.region} elder to learn what must be done."]
+
         goals.append(f"Help the people of the {self.region} to earn the shrine path.")
+        done = sum(1 for flag in self.get_region_task_flags() if flag in player.flags)
+        total = len(self.get_region_task_flags())
+        goals.append(f"Region tasks: {done}/{total}.")
         task_names = {
             "learned_village": "Listen to the Rain Listener.",
             "village_bell_returned": "Return the drowned bell.",

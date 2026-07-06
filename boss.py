@@ -69,7 +69,7 @@ class Boss:
             if "Village Gate Key" in player.story_items:
                 self.player_pellets.append(pygame.Rect(player.combat_x - 4, player.combat_y - 8, 5, 10))
                 self.player_pellets.append(pygame.Rect(player.combat_x + 18, player.combat_y - 8, 5, 10))
-            if "Caverns Gate Key" in player.story_items:
+            if "Cavern Gate Key" in player.story_items or "Caverns Gate Key" in player.story_items:
                 self.player_pellets.append(pygame.Rect(player.combat_x + 4, player.combat_y - 18, 10, 5))
             if "Citadel Gate Key" in player.story_items:
                 self.player_pellets.append(pygame.Rect(player.combat_x + 6, player.combat_y - 26, 8, 8))

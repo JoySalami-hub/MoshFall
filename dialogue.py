@@ -5,7 +5,6 @@ class DialogueBox:
         self.text = text
         self.choices = choices
         self.choice_rects = []
-        self.scroll = 0
         self.font = pygame.font.SysFont("consolas", 22)
         self.small_font = pygame.font.SysFont("consolas", 18)
 
@@ -40,40 +39,29 @@ class DialogueBox:
             screen.blit(self.font.render(line, True, (255, 255, 255)), (125, 425 + i * 28))
         screen.set_clip(old_clip)
 
-        choice_area = pygame.Rect(125, 525, 900, 92)
+        choice_area = pygame.Rect(125, 520, 900, 104)
         pygame.draw.rect(screen, (8, 8, 8), choice_area)
-        max_scroll = max(0, len(self.choices) - 3)
-        self.scroll = max(0, min(self.scroll, max_scroll))
 
         old_clip = screen.get_clip()
         screen.set_clip(choice_area)
-        start = self.scroll
-        visible_choices = self.choices[start:start + 3]
-        for i, choice in enumerate(visible_choices):
-            rect = pygame.Rect(125, 528 + i * 30, 700, 26)
+        visible_count = min(len(self.choices), 5)
+        button_h = 20 if visible_count > 4 else 24
+        gap = 1 if visible_count > 4 else 4
+
+        for i, choice in enumerate(self.choices[:visible_count]):
+            rect = pygame.Rect(125, 524 + i * (button_h + gap), 760, button_h)
             pygame.draw.rect(screen, (45, 45, 45), rect)
             pygame.draw.rect(screen, (255, 255, 255), rect, 2)
 
             label = choice["text"]
             while self.small_font.size(label)[0] > rect.width - 16 and len(label) > 4:
                 label = label[:-4] + "..."
-            screen.blit(self.small_font.render(label, True, (255, 255, 255)), (rect.x + 8, rect.y + 4))
+            screen.blit(self.small_font.render(label, True, (255, 255, 255)), (rect.x + 8, rect.y + 2))
             self.choice_rects.append((rect, choice))
         screen.set_clip(old_clip)
-
-        if max_scroll > 0:
-            track = pygame.Rect(1040, 528, 12, 86)
-            thumb_h = max(20, int(track.height * 3 / len(self.choices)))
-            thumb_y = track.y + int((track.height - thumb_h) * self.scroll / max_scroll)
-            pygame.draw.rect(screen, (70, 70, 70), track)
-            pygame.draw.rect(screen, (220, 220, 220), (track.x, thumb_y, track.width, thumb_h))
 
     def click(self, pos):
         for rect, choice in self.choice_rects:
             if rect.collidepoint(pos):
                 return choice
         return None
-
-    def scroll_choices(self, amount):
-        max_scroll = max(0, len(self.choices) - 3)
-        self.scroll = max(0, min(max_scroll, self.scroll - amount))
