@@ -36,6 +36,7 @@ ENDING = "ending"
 
 state = MENU
 
+# shared game objects
 player = Player(500, 500)
 world = World()
 boss = None
@@ -49,6 +50,7 @@ toast_message = ""
 toast_timer = 0
 item_popup = None
 item_popup_timer = 0
+popup_after_state = None
 boss_mood = 65
 boss_result_text = ""
 boss_reward_relic = None
@@ -61,10 +63,12 @@ def show_toast(text, duration=180):
     toast_message = text
     toast_timer = duration
 
-def show_item_popup(title, description, duration=210):
-    global item_popup, item_popup_timer
+def show_item_popup(title, description, duration=210, after_state=None):
+    # center-screen reward/info popup after_state lets it hand off after fading.
+    global item_popup, item_popup_timer, popup_after_state
     item_popup = {"title": title, "description": description}
     item_popup_timer = duration
+    popup_after_state = after_state
 
 def relic_description(relic):
     descriptions = {
@@ -133,6 +137,7 @@ def game_over_exit_rect():
     return pygame.Rect(470, 570, 260, 54)
 
 def draw_pixel_forest_art():
+    # handmade pixel-ish title art, no asset pipeline required yet
     pygame.draw.rect(screen, (14, 22, 20), (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
     for y in range(0, SCREEN_HEIGHT, 18):
         shade = 18 + (y // 18) % 4 * 4
@@ -268,6 +273,7 @@ def draw_inventory(surface, player):
 
 def draw_region_header():
     draw_text(f"Region: {world.region}", 270, 12)
+    # quests stack here so one new task doesnt erase the older "main" job
     for i, goal in enumerate(world.region_goal_texts(player)[:4]):
         draw_text(goal, 270, 40 + i * 22, (220, 220, 180), use_small=True)
 
@@ -286,10 +292,11 @@ def draw_toast():
         toast_timer -= 1
 
 def draw_item_popup():
-    global item_popup_timer, item_popup
+    global item_popup_timer, item_popup, popup_after_state, state
     if not item_popup or item_popup_timer <= 0:
         return
 
+    # little pause bubble for rewards, quest starts, and boss-talk results
     panel = pygame.Rect(330, 245, 540, 150)
     pygame.draw.rect(screen, (16, 20, 18), panel)
     pygame.draw.rect(screen, (235, 230, 180), panel, 3)
@@ -310,6 +317,9 @@ def draw_item_popup():
     item_popup_timer -= 1
     if item_popup_timer <= 0:
         item_popup = None
+        if popup_after_state:
+            state = popup_after_state
+            popup_after_state = None
 
 def draw_boss_reward(mouse):
     screen.fill((10, 12, 12))
@@ -362,6 +372,7 @@ def make_boss_intro_dialogue():
     )
 
 def make_boss_speak_dialogue():
+    # later regions make the soft approach harder because of course they do T_T gotta add some spice
     region_level = world.get_region_index()
     penalty = region_level * 8
     options = [
@@ -382,8 +393,9 @@ def make_boss_speak_dialogue():
     )
 
 def draw_boss_mood():
-    draw_text("Boss Mood", 125, 366, (220, 230, 220))
-    bar = pygame.Rect(245, 370, 710, 18)
+    # shrine negotiation meter. 50 means "uh oh", 80 means "we talked it down"
+    draw_text("Boss Mood", 125, 326, (220, 230, 220))
+    bar = pygame.Rect(245, 330, 710, 18)
     pygame.draw.rect(screen, (50, 35, 35), bar)
     filled = int(bar.width * max(0, min(100, boss_mood)) / 100)
     pygame.draw.rect(screen, (100, 210, 130), (bar.x, bar.y, filled, bar.height))
@@ -392,14 +404,15 @@ def draw_boss_mood():
     fight_x = bar.x + int(bar.width * 0.5)
     pygame.draw.line(screen, (255, 220, 120), (fight_x, bar.y - 4), (fight_x, bar.bottom + 4), 2)
     pygame.draw.line(screen, (160, 230, 180), (forgive_x, bar.y - 4), (forgive_x, bar.bottom + 4), 2)
-    draw_text(f"{boss_mood}%", 970, 366, use_small=True)
-    draw_text("50 fight", fight_x - 30, 392, (255, 220, 120), use_small=True)
-    draw_text("80 pass", forgive_x - 25, 392, (160, 230, 180), use_small=True)
+    draw_text(f"{boss_mood}%", 970, 326, use_small=True)
+    draw_text("50 fight", fight_x - 30, 352, (255, 220, 120), use_small=True)
+    draw_text("80 pass", forgive_x - 25, 352, (160, 230, 180), use_small=True)
     if boss_result_text:
         draw_text(boss_result_text, 280, 360, (255, 255, 140), use_small=True)
 
 def grant_boss_reward():
     global state, upgrade_options, boss_reward_relic
+    # victory path: heal up, lock the shrine, hand over a key, then upgrades
     boss_reward_relic = world.get_random_relic()
     player.relics.append(boss_reward_relic)
     apply_relics(player)
@@ -425,6 +438,7 @@ def load_saved_game(slot):
         return
 
     world = World()
+    # rebuild the world to the saved region, since npcs/obstacles swap per area
     target_region = data.get("region")
     if not target_region:
         target_region = "Village" if "left_forest" in player.flags else "Forest"
@@ -445,6 +459,7 @@ def handle_effect(effect):
     global state, boss, dialogue, upgrade_options, boss_mood, boss_result_text
 
     if effect == "next:explore":
+        show_item_popup("Forest", "Speak to Elder Rowan first. He will tell you what the forest needs before the shrine opens.")
         state = EXPLORE
 
     elif effect.startswith("dialogue:"):
@@ -524,6 +539,7 @@ def handle_effect(effect):
         state = EXPLORE
 
     elif effect == "region_tasks:start":
+        # local elder/warden flips the switch so regional quest npcs wake up
         player.flags.add(world.get_region_tasks_started_flag())
         show_item_popup(f"{world.region} Tasks", "The local elder has named the work. Help the people here before seeking the shrine.")
         state = EXPLORE
@@ -552,18 +568,23 @@ def handle_effect(effect):
         chance = int(parts[2])
         gain = int(parts[3])
         if random.randint(1, 100) <= chance:
+            # good words, better vibes
             boss_mood = min(100, boss_mood + gain)
             boss_result_text = f"Success. Mood rises to {boss_mood}%."
             if boss_mood >= 80:
                 player.mercy += 1
+                show_item_popup("The boss softens", "Your words land. The guardian forgives you and lets you pass without a fight.", after_state=BOSS_REWARD)
                 grant_boss_reward()
                 return
+            show_item_popup("Success", f"The guardian listens. Boss mood rises to {boss_mood}%.")
         else:
+            # bad vibes, womp womp
             boss_mood = max(0, boss_mood - 18)
             boss_result_text = f"Failed. Mood falls to {boss_mood}%."
             if boss_mood < 50:
-                state = BOSS_COMBAT
+                show_item_popup("Failed", f"The guardian recoils. Boss mood falls to {boss_mood}%, and the fight begins.", after_state=BOSS_COMBAT)
                 return
+            show_item_popup("Failed", f"The words come out wrong. Boss mood falls to {boss_mood}%.")
         dialogue = make_boss_speak_dialogue()
         state = BOSS_DIALOGUE
 
@@ -589,6 +610,7 @@ def handle_effect(effect):
             state = BOSS_DIALOGUE
 
     elif effect.startswith("region:"):
+        # stepping through a gate swaps the region kit: npcs, obstacles, shrine, etc
         next_region = effect.split(":", 1)[1].title()
         fade_to_black(f"Leaving for the {next_region}...")
         world.next_region()
@@ -630,7 +652,16 @@ while running:
             elif event.key == pygame.K_SPACE and state == BOSS_COMBAT and boss:
                 boss.fire_player_pellet(player)
 
+        if event.type == pygame.MOUSEWHEEL:
+            if state in (DIALOGUE, BOSS_DIALOGUE) and dialogue:
+                dialogue.scroll_choices(event.y)
+
         if event.type == pygame.MOUSEBUTTONDOWN:
+            if getattr(event, "button", 1) != 1:
+                continue
+            if item_popup:
+                continue
+
             if state == MENU:
                 if menu_play_rect().collidepoint(mouse):
                     trigger_dialogue("intro_1")
@@ -693,6 +724,7 @@ while running:
                     collectible = world.get_nearby_collectible(player)
 
                     if collectible:
+                        # click the shiny quest object, mark the task done
                         player.flags.add(collectible["done"])
                         show_item_popup(collectible["label"], "Collected. Return to the person who asked for it, or continue helping the region.")
 
@@ -705,7 +737,7 @@ while running:
                         player_rect.colliderect(world.get_shrine_rect())
                     ):
                         boss = Boss(world.region)
-                        boss_mood = max(35, 65 - world.get_region_index() * 8)
+                        boss_mood = 65
                         boss_result_text = ""
                         dialogue = make_boss_intro_dialogue()
                         state = BOSS_DIALOGUE
@@ -775,6 +807,7 @@ while running:
         draw_item_popup()
 
     elif state == EXPLORE:
+        # open-world-ish movement/camera section
         keys = pygame.key.get_pressed()
         player.move_world(keys, world.get_world_obstacles(), WORLD_WIDTH, WORLD_HEIGHT)
 
@@ -844,6 +877,7 @@ while running:
             )
 
     elif state == BOSS_COMBAT:
+        # bullet-dodge arena. boss owns projectiles, player owns the their own.
         screen.fill((22, 22, 30))
         combat_bounds = pygame.Rect(260, 90, 700, 540)
         player.update_boss_combat(bounds=combat_bounds)
@@ -871,6 +905,7 @@ while running:
         draw_item_popup()
 
     elif state == UPGRADE_DELAY:
+       
         screen.fill((10, 12, 12))
         seconds = max(1, upgrade_delay_timer // 60 + 1)
         draw_text("The shrine's gift settles into your bones...", 390, 300, (240, 245, 220))

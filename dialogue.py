@@ -5,10 +5,12 @@ class DialogueBox:
         self.text = text
         self.choices = choices
         self.choice_rects = []
+        self.scroll = 0
         self.font = pygame.font.SysFont("consolas", 22)
         self.small_font = pygame.font.SysFont("consolas", 18)
 
     def wrap_text(self, text, max_width):
+        # tiny word wrapper si should keeps the dialogue from escaping jail
         words = text.split(" ")
         lines = []
         current = ""
@@ -27,10 +29,12 @@ class DialogueBox:
     def draw(self, screen):
         self.choice_rects = []
 
+        # main dialogue slab at the bottom. all text/choices get clipped inside it.
         box = pygame.Rect(100, 400, 1000, 240)
         pygame.draw.rect(screen, (0, 0, 0), box)
         pygame.draw.rect(screen, (255, 255, 255), box, 3)
 
+        # text gets its own lil window so long npc speeches dont leak everywhere
         old_clip = screen.get_clip()
         text_area = pygame.Rect(125, 422, 930, 96)
         screen.set_clip(text_area)
@@ -39,16 +43,19 @@ class DialogueBox:
             screen.blit(self.font.render(line, True, (255, 255, 255)), (125, 425 + i * 28))
         screen.set_clip(old_clip)
 
+        # choices can scroll, but only the visible buttons are clickable
         choice_area = pygame.Rect(125, 520, 900, 104)
         pygame.draw.rect(screen, (8, 8, 8), choice_area)
+        max_scroll = max(0, len(self.choices) - 4)
+        self.scroll = max(0, min(self.scroll, max_scroll))
 
         old_clip = screen.get_clip()
         screen.set_clip(choice_area)
-        visible_count = min(len(self.choices), 5)
-        button_h = 20 if visible_count > 4 else 24
-        gap = 1 if visible_count > 4 else 4
+        visible_count = min(len(self.choices), 4)
+        button_h = 23
+        gap = 3
 
-        for i, choice in enumerate(self.choices[:visible_count]):
+        for i, choice in enumerate(self.choices[self.scroll:self.scroll + visible_count]):
             rect = pygame.Rect(125, 524 + i * (button_h + gap), 760, button_h)
             pygame.draw.rect(screen, (45, 45, 45), rect)
             pygame.draw.rect(screen, (255, 255, 255), rect, 2)
@@ -60,8 +67,22 @@ class DialogueBox:
             self.choice_rects.append((rect, choice))
         screen.set_clip(old_clip)
 
+        if max_scroll > 0:
+            # scrollbar is for ease of picking and visual feedback
+            track = pygame.Rect(1040, 524, 12, 96)
+            thumb_h = max(22, int(track.height * visible_count / len(self.choices)))
+            thumb_y = track.y + int((track.height - thumb_h) * self.scroll / max_scroll)
+            pygame.draw.rect(screen, (70, 70, 70), track)
+            pygame.draw.rect(screen, (220, 220, 220), (track.x, thumb_y, track.width, thumb_h))
+
     def click(self, pos):
+        # only actual drawn choice rects count so itll keeps scroll-hidden options harmless
         for rect, choice in self.choice_rects:
             if rect.collidepoint(pos):
                 return choice
         return None
+
+    def scroll_choices(self, amount):
+        # mouse wheel moves the list so itll stop picking a damn choice by itself
+        max_scroll = max(0, len(self.choices) - 4)
+        self.scroll = max(0, min(max_scroll, self.scroll - amount))
