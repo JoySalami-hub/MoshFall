@@ -1,10 +1,10 @@
 {
-  "x": 1464,
-  "y": 304,
+  "x": 2468,
+  "y": 348,
   "hp": 120,
   "max_hp": 120,
-  "damage": 10,
-  "speed": 4,
+  "damage": 15,
+  "speed": 5,
   "relics": [
     {
       "name": "Moss Lens",
@@ -13,25 +13,30 @@
     {
       "name": "Root Charm",
       "effect": "heal"
+    },
+    {
+      "name": "Moss Crown",
+      "effect": "damage"
     }
   ],
   "story_items": [
+    "Forest Gate Key",
     "Forest Map"
   ],
   "flags": [
-    "forest_shrine_unlocked",
-    "learned_scout",
-    "child_quest_complete",
-    "learned_cartographer",
+    "forest_boss_defeated",
     "learned_roots",
-    "child_quest_started",
     "learned_stones",
-    "learned_gate",
-    "forager_listened",
-    "child_reward_taken",
     "forager_quest_complete",
-    "learned_song",
-    "hunter_resolved"
+    "child_quest_started",
+    "hunter_resolved",
+    "child_reward_taken",
+    "learned_gate",
+    "learned_cartographer",
+    "learned_scout",
+    "forager_listened",
+    "child_quest_complete",
+    "learned_song"
   ],
   "mercy": 0,
   "power": 1,
