@@ -1,10 +1,10 @@
 {
-  "x": 2204,
-  "y": 340,
-  "hp": 140,
+  "x": 2396,
+  "y": 392,
+  "hp": 160,
   "max_hp": 160,
   "damage": 15,
-  "speed": 4,
+  "speed": 6,
   "relics": [
     {
       "name": "Moss Lens",
@@ -15,46 +15,70 @@
       "effect": "heal"
     },
     {
-      "name": "Ancient Acorn",
-      "effect": "heal"
+      "name": "Broken Compass",
+      "effect": "speed"
     },
     {
       "name": "Moss Crown",
       "effect": "damage"
+    },
+    {
+      "name": "Ancient Acorn",
+      "effect": "heal"
+    },
+    {
+      "name": "Ancient Acorn",
+      "effect": "heal"
     }
   ],
   "story_items": [
     "Village Gate Key",
-    "Forest Map",
-    "Forest Gate Key"
+    "Cavern Gate Key",
+    "Citadel Gate Key",
+    "Forest Gate Key",
+    "Forest Map"
   ],
   "flags": [
-    "forager_listened",
-    "learned_stones",
-    "learned_gate",
-    "forager_quest_complete",
-    "cavern_miner_found",
-    "child_quest_complete",
-    "learned_cavern",
-    "learned_village",
-    "forest_boss_defeated",
-    "learned_roots",
-    "village_boss_defeated",
-    "caverns_shrine_unlocked",
-    "cavern_crystal_found",
-    "reached_caverns",
-    "learned_lantern",
-    "hunter_resolved",
-    "village_medic_helped",
-    "reached_village",
-    "child_quest_started",
-    "village_bell_returned",
     "learned_cartographer",
+    "child_quest_started",
+    "reached_citadel",
+    "village_boss_defeated",
+    "learned_citadel",
+    "forager_listened",
+    "citadel_embers_gathered",
+    "cavern_boss_defeated",
+    "child_reward_taken",
+    "forager_quest_complete",
+    "learned_scout",
+    "citadel_tasks_started",
+    "learned_roots",
+    "reached_cavern",
+    "learned_village",
+    "learned_cavern",
+    "learned_stones",
+    "cavern_miner_found",
+    "reached_village",
+    "started_cavern_crystal",
+    "citadel_boss_defeated",
+    "citadel_banner_mended",
+    "started_citadel_banner",
+    "cavern_tasks_started",
+    "started_citadel_embers",
+    "village_tasks_started",
+    "cavern_crystal_found",
+    "learned_gate",
+    "forest_boss_defeated",
+    "village_bell_returned",
+    "village_medic_helped",
     "learned_song",
-    "child_reward_taken"
+    "hunter_resolved",
+    "started_cavern_miner",
+    "child_quest_complete",
+    "started_village_medic",
+    "started_village_bell"
   ],
-  "mercy": 0,
-  "power": 1,
-  "knowledge": 9,
-  "region": "Caverns"
+  "mercy": 7,
+  "power": 3,
+  "knowledge": 15,
+  "region": "Citadel"
 }

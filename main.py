@@ -313,15 +313,19 @@ def draw_item_popup():
 
 def draw_boss_reward(mouse):
     screen.fill((10, 12, 12))
-    panel = pygame.Rect(300, 190, 600, 310)
+    panel = pygame.Rect(250, 175, 700, 330)
     pygame.draw.rect(screen, (18, 24, 20), panel)
     pygame.draw.rect(screen, (235, 230, 180), panel, 3)
     key_name = world.get_region_key_item()
-    draw_text(key_name, 500, 230, (255, 245, 180))
-    draw_text("The guardian falls quiet. In the shrine roots, an iron key waits.", 350, 285, (225, 230, 210), use_small=True)
-    draw_text(f"You got the {key_name}.", 430, 325, (255, 255, 140), use_small=True)
+    key_surf = font.render(key_name, True, (255, 245, 180))
+    screen.blit(key_surf, (panel.centerx - key_surf.get_width() // 2, 220))
+    line = small_font.render("The guardian falls quiet. In the shrine roots, an iron key waits.", True, (225, 230, 210))
+    screen.blit(line, (panel.centerx - line.get_width() // 2, 285))
+    got = small_font.render(f"You got the {key_name}.", True, (255, 255, 140))
+    screen.blit(got, (panel.centerx - got.get_width() // 2, 325))
     if boss_reward_relic:
-        draw_text(f"Relic found: {boss_reward_relic['name']}", 455, 360, (200, 230, 200), use_small=True)
+        relic_line = small_font.render(f"Relic found: {boss_reward_relic['name']}", True, (200, 230, 200))
+        screen.blit(relic_line, (panel.centerx - relic_line.get_width() // 2, 360))
     continue_rect = boss_continue_rect()
     draw_menu_button(continue_rect, "CONTINUE", mouse)
     return continue_rect
@@ -378,15 +382,19 @@ def make_boss_speak_dialogue():
     )
 
 def draw_boss_mood():
-    draw_text("Boss Mood", 995, 130, (220, 230, 220))
-    bar = pygame.Rect(1010, 165, 26, 260)
+    draw_text("Boss Mood", 125, 366, (220, 230, 220))
+    bar = pygame.Rect(245, 370, 710, 18)
     pygame.draw.rect(screen, (50, 35, 35), bar)
-    filled = int(bar.height * max(0, min(100, boss_mood)) / 100)
-    pygame.draw.rect(screen, (100, 210, 130), (bar.x, bar.bottom - filled, bar.width, filled))
+    filled = int(bar.width * max(0, min(100, boss_mood)) / 100)
+    pygame.draw.rect(screen, (100, 210, 130), (bar.x, bar.y, filled, bar.height))
     pygame.draw.rect(screen, (255, 255, 255), bar, 2)
-    pygame.draw.line(screen, (255, 220, 120), (bar.x - 8, bar.y + bar.height // 2), (bar.right + 8, bar.y + bar.height // 2), 2)
-    draw_text(f"{boss_mood}%", 996, 440, use_small=True)
-    draw_text("Fight below 50", 955, 466, (255, 220, 120), use_small=True)
+    forgive_x = bar.x + int(bar.width * 0.8)
+    fight_x = bar.x + int(bar.width * 0.5)
+    pygame.draw.line(screen, (255, 220, 120), (fight_x, bar.y - 4), (fight_x, bar.bottom + 4), 2)
+    pygame.draw.line(screen, (160, 230, 180), (forgive_x, bar.y - 4), (forgive_x, bar.bottom + 4), 2)
+    draw_text(f"{boss_mood}%", 970, 366, use_small=True)
+    draw_text("50 fight", fight_x - 30, 392, (255, 220, 120), use_small=True)
+    draw_text("80 pass", forgive_x - 25, 392, (160, 230, 180), use_small=True)
     if boss_result_text:
         draw_text(boss_result_text, 280, 360, (255, 255, 140), use_small=True)
 
@@ -515,6 +523,17 @@ def handle_effect(effect):
             show_item_popup(label, "The task is complete. The region trusts you a little more.")
         state = EXPLORE
 
+    elif effect == "region_tasks:start":
+        player.flags.add(world.get_region_tasks_started_flag())
+        show_item_popup(f"{world.region} Tasks", "The local elder has named the work. Help the people here before seeking the shrine.")
+        state = EXPLORE
+
+    elif effect.startswith("quest:"):
+        quest = effect.split(":", 1)[1]
+        player.flags.add(f"started_{quest}")
+        show_item_popup("Quest Started", "A location has been marked in the region. Find the glowing object and click it to collect what is needed.")
+        state = EXPLORE
+
     elif effect == "unlock:shrine":
         player.flags.add(world.get_shrine_unlocked_flag())
         show_toast("Shrine location revealed")
@@ -576,6 +595,7 @@ def handle_effect(effect):
         player.flags.add(f"reached_{world.get_region_key()}")
         player.x = 320
         player.y = 560
+        show_item_popup(world.region, "Speak to the local elder first. They will tell you what this region needs before the shrine opens.")
         state = EXPLORE
 
     elif effect == "ending:relics":
@@ -609,10 +629,6 @@ while running:
                     state = MENU
             elif event.key == pygame.K_SPACE and state == BOSS_COMBAT and boss:
                 boss.fire_player_pellet(player)
-
-        if event.type == pygame.MOUSEWHEEL:
-            if state in (DIALOGUE, BOSS_DIALOGUE) and dialogue:
-                dialogue.scroll_choices(event.y)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if state == MENU:
@@ -674,8 +690,13 @@ while running:
                     trigger_dialogue(npc.dialogue_id)
                 else:
                     player_rect = player.get_rect_world()
+                    collectible = world.get_nearby_collectible(player)
 
-                    if world.can_interact_with_stump(player) and "Forest Map" not in player.story_items:
+                    if collectible:
+                        player.flags.add(collectible["done"])
+                        show_item_popup(collectible["label"], "Collected. Return to the person who asked for it, or continue helping the region.")
+
+                    elif world.can_interact_with_stump(player) and "Forest Map" not in player.story_items:
                         handle_effect("find:forest_map")
 
                     elif (
@@ -747,9 +768,9 @@ while running:
         draw_item_popup()
 
     elif state == BOSS_DIALOGUE:
-        dialogue.draw(screen)
         if boss:
             draw_boss_mood()
+        dialogue.draw(screen)
         draw_toast()
         draw_item_popup()
 
@@ -767,7 +788,7 @@ while running:
         player.draw_world(screen, camera_x, camera_y)
 
         draw_inventory(screen, player)
-        draw_health_bar(screen, 18, 72, 200, 18, player.hp, player.max_hp)
+        draw_health_bar(screen, 955, 42, 220, 18, player.hp, player.max_hp)
         draw_region_header()
         draw_toast()
         draw_item_popup()
@@ -784,6 +805,17 @@ while running:
                 stump.x - camera_x - 20,
                 stump.y - camera_y - 25,
                 (120, 220, 255),
+                use_small=True
+            )
+
+        collectible = world.get_nearby_collectible(player)
+        if collectible:
+            rect = collectible["rect"]
+            draw_text(
+                collectible["prompt"],
+                rect.x - camera_x - 20,
+                rect.y - camera_y - 25,
+                (255, 245, 150),
                 use_small=True
             )
 
@@ -821,7 +853,7 @@ while running:
         boss.draw(screen)
 
         draw_inventory(screen, player)
-        draw_health_bar(screen, 18, 72, 200, 18, player.hp, player.max_hp)
+        draw_health_bar(screen, 955, 42, 220, 18, player.hp, player.max_hp)
         draw_text(f"Boss: {boss.name}", 270, 65)
         draw_text(f"Boss HP: {max(0, boss.hp)}/{boss.max_hp}", 270, 92)
         draw_text("Press SPACE to shoot pellets. Dodge the moss.", 270, 120, (220, 220, 180), use_small=True)

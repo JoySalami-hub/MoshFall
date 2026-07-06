@@ -1,15 +1,40 @@
 {
-  "x": 1092,
-  "y": 760,
-  "hp": 100,
-  "max_hp": 100,
+  "x": 1464,
+  "y": 304,
+  "hp": 120,
+  "max_hp": 120,
   "damage": 10,
   "speed": 4,
-  "relics": [],
-  "story_items": [],
-  "flags": [],
+  "relics": [
+    {
+      "name": "Moss Lens",
+      "effect": "knowledge"
+    },
+    {
+      "name": "Root Charm",
+      "effect": "heal"
+    }
+  ],
+  "story_items": [
+    "Forest Map"
+  ],
+  "flags": [
+    "forest_shrine_unlocked",
+    "learned_scout",
+    "child_quest_complete",
+    "learned_cartographer",
+    "learned_roots",
+    "child_quest_started",
+    "learned_stones",
+    "learned_gate",
+    "forager_listened",
+    "child_reward_taken",
+    "forager_quest_complete",
+    "learned_song",
+    "hunter_resolved"
+  ],
   "mercy": 0,
-  "power": 0,
-  "knowledge": 0,
+  "power": 1,
+  "knowledge": 7,
   "region": "Forest"
 }
