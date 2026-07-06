@@ -1,0 +1,15 @@
+{
+  "x": 1092,
+  "y": 760,
+  "hp": 100,
+  "max_hp": 100,
+  "damage": 10,
+  "speed": 4,
+  "relics": [],
+  "story_items": [],
+  "flags": [],
+  "mercy": 0,
+  "power": 0,
+  "knowledge": 0,
+  "region": "Forest"
+}

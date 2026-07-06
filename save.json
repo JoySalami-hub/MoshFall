@@ -1,0 +1,47 @@
+{
+  "x": 2292,
+  "y": 460,
+  "hp": 0,
+  "max_hp": 140,
+  "damage": 20,
+  "speed": 4,
+  "relics": [
+    {
+      "name": "Moss Lens",
+      "effect": "knowledge"
+    },
+    {
+      "name": "Root Charm",
+      "effect": "heal"
+    },
+    {
+      "name": "Ancient Acorn",
+      "effect": "heal"
+    }
+  ],
+  "story_items": [
+    "Forest Gate Key",
+    "Forest Map"
+  ],
+  "flags": [
+    "reached_village",
+    "hunter_resolved",
+    "learned_gate",
+    "child_quest_started",
+    "learned_song",
+    "village_shrine_unlocked",
+    "forager_listened",
+    "forager_quest_complete",
+    "learned_stones",
+    "learned_cartographer",
+    "learned_roots",
+    "child_reward_taken",
+    "forest_boss_defeated",
+    "child_quest_complete",
+    "learned_scout"
+  ],
+  "mercy": 0,
+  "power": 1,
+  "knowledge": 7,
+  "region": "Village"
+}

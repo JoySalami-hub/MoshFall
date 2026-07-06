@@ -1,0 +1,60 @@
+{
+  "x": 2204,
+  "y": 340,
+  "hp": 140,
+  "max_hp": 160,
+  "damage": 15,
+  "speed": 4,
+  "relics": [
+    {
+      "name": "Moss Lens",
+      "effect": "knowledge"
+    },
+    {
+      "name": "Root Charm",
+      "effect": "heal"
+    },
+    {
+      "name": "Ancient Acorn",
+      "effect": "heal"
+    },
+    {
+      "name": "Moss Crown",
+      "effect": "damage"
+    }
+  ],
+  "story_items": [
+    "Village Gate Key",
+    "Forest Map",
+    "Forest Gate Key"
+  ],
+  "flags": [
+    "forager_listened",
+    "learned_stones",
+    "learned_gate",
+    "forager_quest_complete",
+    "cavern_miner_found",
+    "child_quest_complete",
+    "learned_cavern",
+    "learned_village",
+    "forest_boss_defeated",
+    "learned_roots",
+    "village_boss_defeated",
+    "caverns_shrine_unlocked",
+    "cavern_crystal_found",
+    "reached_caverns",
+    "learned_lantern",
+    "hunter_resolved",
+    "village_medic_helped",
+    "reached_village",
+    "child_quest_started",
+    "village_bell_returned",
+    "learned_cartographer",
+    "learned_song",
+    "child_reward_taken"
+  ],
+  "mercy": 0,
+  "power": 1,
+  "knowledge": 9,
+  "region": "Caverns"
+}
